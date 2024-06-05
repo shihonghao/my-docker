@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+    alist:
+        image: 'p3terx/aria2-pro'
+        container_name: aria2
+        ports:
+            - '6800:6800'
+            - '6888:6888'
+        volumes:
+            - '/data:/data'
+        environment:
+            - PUID=root
+            - PGID=root
+            - RPC_SECRET=Birthday19
+        restart: unless-stopped
+

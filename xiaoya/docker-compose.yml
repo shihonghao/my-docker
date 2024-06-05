@@ -1,0 +1,79 @@
+services:
+
+  emby:
+
+    container_name: "emby"
+
+    devices:
+      - "/dev/dri:/dev/dri"
+
+    environment:
+      - "TZ=Asia/Shanghai"
+      - "GIDLIST=0,0"
+      - "UID=0"
+      - "GID=0"
+      - "NVIDIA_VISIBLE_DEVICES=all" 
+      - "NVIDIA_DRIVER_CAPABILITIES=all"
+
+    ports:
+      - "6908:6908"
+
+    image: "emby/embyserver:4.8.0.56"
+
+    restart: "always"
+   
+    volumes:
+      - "/etc/nsswitch.conf:/etc/nsswitch.conf"
+      - "/data/xiaoya/emby/media/config:/config"
+      - "/data/xiaoya/emby/media/xiaoya:/media"
+
+  resilio:
+
+    container_name: "resilio"
+
+    entrypoint:
+      - "/init"
+
+    environment:
+      - "TZ=Asia/Shanghai"
+
+    image: "linuxserver/resilio-sync:latest"
+
+    ports:
+      - "55555:55555/tcp"
+      - "8888:8888/tcp"
+
+    restart: "always"
+
+    volumes:
+      - "/data/xiaoya/emby/media/resilio/downloads:/downloads"
+      - "/data/xiaoya/emby/media/resilio:/config"
+      - "/data/xiaoya/emby/media:/sync"
+
+  xiaoya:
+    container_name: "xiaoya"
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "TZ=Asia/Shanghai"
+    image: "xiaoyaliu/alist:latest"
+    ports:
+      - "2345:2345/tcp"
+      - "2346:2346/tcp"
+      - "5678:80/tcp"
+    restart: "always"
+    
+    volumes:
+      - "/data/xiaoya/alist/data:/opt/alist/data"
+      - "/data/xiaoya/data:/data"
+      - "/data/xiaoya/www/data:/www/data"
+
+  xiaoya-emd:
+    container_name: "xiaoya-emd"
+    environment:
+      - "TZ=Asia/Shanghai"
+    image: "ddsderek/xiaoya-emd:latest"
+    restart: "always"
+    volumes:
+      - "/data/xiaoya/emby/media/xiaoya:/media"
+
+version: "3.6"

@@ -1,0 +1,14 @@
+version: "2"
+services:
+  portainer:
+      container_name: portainer
+      network_mode: bridge
+      image: 6053537/portainer-ce:latest
+      # image: 6053537/portainer-ce   #汉化版。官方版为portainer/portainer-ce
+      # image: hub-mirror.c.163.com/6053537/portainer-ce #推荐国内服务器或nas用，需要请用#注释上一行
+      ports:
+        - 9000:9000
+      volumes:
+        - /data/portainer:/data
+        - /var/run/docker.sock:/var/run/docker.sock
+      restart: unless-stopped
